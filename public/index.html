@@ -29,12 +29,12 @@
           <li><strong>Body (JSON):</strong>
             <pre><code>
 {
-  "name": "string (min 2 chars, non-numeric)",
-  "lastname": "string (min 2 chars, non-numeric)",
-  "username": "string (3-30 chars)",
-  "email": "string (valid email)",
-  "password": "string (min 6 chars)",
-  "role": "string (optional, 'user' or 'admin', default: 'user')"
+  "name": "string (min 2 caractéres, no-numéricos)",
+  "lastname": "string (min 2 caractéres, no-numéricos)",
+  "username": "string (3-30 caractéres)",
+  "email": "string (email válido)",
+  "password": "string (min 6 caractéres)",
+  "role": "string (opcional, 'user' or 'admin', default: 'user')"
 }
             </code></pre>
           </li>
@@ -57,17 +57,17 @@
 }
             </code></pre>
           </li>
-          <li><strong>400 Bad Request:</strong> Invalid input (e.g., missing fields, numeric-only name).
+          <li><strong>400 Bad Request:</strong> Input inválido(En este caso, si se manda un nombre sólo de números).
             <pre><code>
 {
   "message": "El nombre no puede ser solo números, El correo es obligatorio"
 }
             </code></pre>
           </li>
-          <li><strong>409 Conflict:</strong> Email or username already exists.
+          <li><strong>409 Conflict:</strong> Si el email o el usuario ya existen.
             <pre><code>
 {
-  "message": "Email or username already exists"
+  "message": "El correo ya está en uso, El nombre de usuario ya está en uso"
 }
             </code></pre>
           </li>
@@ -134,24 +134,24 @@
         <p><strong>Respuestas esperadas:</strong></p>
         <ul>
           <li><strong>204 No Content:</strong> User deleted successfully.</li>
-          <li><strong>401 Unauthorized:</strong> Missing or invalid token.
+          <li><strong>401 Unauthorized:</strong> Token perdido o inválido.
             <pre><code>
 {
   "message": "Authentication required"
 }
             </code></pre>
           </li>
-          <li><strong>403 Forbidden:</strong> Non-admin user.
+          <li><strong>403 Forbidden:</strong> El usuario no es Admin.
             <pre><code>
 {
   "message": "Admin access required"
 }
             </code></pre>
           </li>
-          <li><strong>404 Not Found:</strong> User not found.
+          <li><strong>404 Not Found:</strong> Usuario no encontrado.
             <pre><code>
 {
-  "message": "User not found"
+  "message": "Usuario no encontrado"
 }
             </code></pre>
           </li>
@@ -159,7 +159,7 @@
       </li>
       
       <li>
-        <strong>GET</strong> /api/v1/niche/niches
+        <strong>GET</strong> /api/niche/niches
         <p><strong>DESCRIPCIÓN:</strong> Trae la lista de objetos Nicho.</p>
         <p><strong>Requerimientos del Request:</strong></p>
         <ul>
@@ -167,7 +167,7 @@
         </ul>
         <p><strong>Respuestas esperadas:</strong></p>
         <ul>
-          <li><strong>200 OK:</strong> List of niches returned.
+          <li><strong>200 OK:</strong> Lista de nichos devuelta.
             <pre><code>
 [
   {
@@ -214,15 +214,140 @@
           </li>
         </ul>
       </li>
+
+      <li>
+        <strong>GET</strong> /api/relics/:relicId
+        <p><strong>DESCRIPCIÓN:</strong> Trae una relic específica a ese ID.</p>
+        <p><strong>Requerimientos del Request:</strong></p>
+        <ul>
+          <li><strong>Params:</strong> <code>id</code> (MongoDB ObjectId)</li>
+          <li><strong>Headers:</strong> <code>Authorization: Bearer &lt;token&gt;</code></li>
+        </ul>
+        <p><strong>Respuestas esperadas:</strong></p>
+        <ul>
+          <li><strong>200 OK:</strong> Devuelve la reliquia consultada.
+            <pre><code>
+{
+    "_id": "string",
+    "owner": {
+        "_id": "string",
+        "username": "string",
+    },
+    "niche": {
+        "category": "TCG",
+        "specific": "Magic: The Gathering"
+    },
+    "year": 2021,
+    "name": "Lord of the Nazgûl",
+    "condition": "Perfecto Estado",
+    "set": "LOTR",
+    "likes": [],
+    "createdAt": "2025-05-15T01:20:33.869Z",
+    "updatedAt": "2025-05-18T16:25:52.987Z",
+    "__v": 0,
+    "description": "descripción de la reliquia",
+    "picture": "URL DE LA IMAGEN",
+}
+            </code></pre>
+          </li>
+          <li><strong>500 Internal Server Error:</strong> Fallo al traer la reliquia.
+            <pre><code>
+{
+  "message": "No se pudo cargar la reliquia"
+}
+            </code></pre>
+          </li>
+        </ul>
+      </li>
+
+            <li>
+        <strong>GET</strong> /api/relics/reliquary/:userId
+        <p><strong>DESCRIPCIÓN:</strong> Trae el relicario específico al ID del usuario que se le pasa.</p>
+        <p><strong>Requerimientos del Request:</strong></p>
+        <ul>
+          <li><strong>Params:</strong> <code>id</code> (MongoDB ObjectId)</li>
+          <li><strong>Headers:</strong> <code>Authorization: Bearer &lt;token&gt;</code></li>
+        </ul>
+        <p><strong>Respuestas esperadas:</strong></p>
+        <ul>
+          <li><strong>200 OK:</strong> Devuelve una lista de reliquias separadas por nicho correspondientes al usuario consultado.
+            <pre><code>
+[
+    {
+        "niche": {
+            "category": "TCG",
+            "specific": "Magic: The Gathering"
+        },
+        "relics": [
+            {
+                "_id": "string",
+                "owner": "string",
+                "niche": {
+                    "category": "TCG",
+                    "specific": "Magic: The Gathering"
+                },
+                "year": 2021,
+                "name": "Lord of the Nazgûl",
+                "condition": "Perfecto Estado",
+                "set": "LOTR",
+                "likes": [],
+                "createdAt": "2025-05-15T01:20:33.869Z",
+                "updatedAt": "2025-05-18T16:25:52.987Z",
+                "__v": 0,
+                "description": "esta es una descripcion nueva",
+                "picture": "URL DE LA IMAGEN"
+            },
+            {
+                "_id": "string",
+                "owner": "string",
+                "niche": {
+                    "category": "TCG",
+                    "specific": "Magic: The Gathering"
+                },
+                "year": 2021,
+                "name": "Evacuation",
+                "description": "Carta evacuation mono azul de mtg",
+                "condition": "Moderadamente Usado",
+                "set": "Commanders Masters",
+                "picture": "URL DE LA IMAGEN",
+                "likes": [],
+                "createdAt": "2025-05-17T21:19:29.217Z",
+                "updatedAt": "2025-05-17T21:19:29.217Z",
+                "__v": 0
+            }
+        ],
+        "_id": "string"
+    },
+    {
+        "niche": {
+            "category": "Cómics",
+            "specific": "DC"
+        },
+        "relics": [],
+        "_id": "string"
+    }
+]
+            </code></pre>
+          </li>
+          <li><strong>500 Internal Server Error:</strong> Fallo al traer el relicario del usuario.
+            <pre><code>
+{
+  "message": "No se pudo cargar el relicario"
+}
+            </code></pre>
+          </li>
+        </ul>
+      </li>
+
     </ul>
   </main>
   <footer>
     <ul>
-      <li>Nombre y Apellido: Mateo Neglia</li>
-      <li>Nombre de la materia: Aplicaciones Híbridas</li>
-      <li>Nombre del docente: MARCOS GALBÁN, Camila Belén</li>
-      <li>Comisión: DWN4AV</li>
-      <li>Fecha de entrega: 19-05-2025</li>
+      <li><b>Nombre y Apellido:</b> Mateo Neglia</li>
+      <li><b>Nombre de la materia: </b>Aplicaciones Híbridas</li>
+      <li><b>Nombre del docente: </b>MARCOS GALBÁN, Camila Belén</li>
+      <li><b>Comisión: </b>DWN4AV</li>
+      <li><b>Fecha de entrega: </b>19-05-2025</li>
     </ul>
   </footer>
 </body>
