@@ -1,0 +1,103 @@
+[{
+  "_id": {
+    "$oid": "68228b0a9fbfca13b6cc319f"
+  },
+  "category": "TCG",
+  "specifics": [
+    "Magic: The Gathering",
+    "Pokémon",
+    "Yu-Gi-Oh!",
+    "Cardfight!! Vanguard",
+    "Digimon"
+  ]
+},
+{
+  "_id": {
+    "$oid": "68228b0a9fbfca13b6cc31a0"
+  },
+  "category": "Deportes",
+  "specifics": [
+    "Artículos de Fútbol",
+    "Tarjetas de Béisbol",
+    "Camisetas de Baloncesto",
+    "Coleccionables de Hockey",
+    "Tarjetas de Fútbol"
+  ]
+},
+{
+  "_id": {
+    "$oid": "68228b0a9fbfca13b6cc31a1"
+  },
+  "category": "Cómics",
+  "specifics": [
+    "Marvel",
+    "DC",
+    "Manga",
+    "Cómics Independientes",
+    "Novelas Gráficas"
+  ]
+},
+{
+  "_id": {
+    "$oid": "68228b0a9fbfca13b6cc31a2"
+  },
+  "category": "Monedas",
+  "specifics": [
+    "Monedas Históricas",
+    "Monedas Conmemorativas",
+    "Monedas de Lingotes",
+    "Pesos Argentinos"
+  ]
+},
+{
+  "_id": {
+    "$oid": "68228b0a9fbfca13b6cc31a3"
+  },
+  "category": "Estampillas",
+  "specifics": [
+    "Estampillas Vintage",
+    "Estampillas Temáticas",
+    "Estampillas Internacionales",
+    "Estampillas Argentinas"
+  ]
+},
+{
+  "_id": {
+    "$oid": "68228b0a9fbfca13b6cc31a4"
+  },
+  "category": "Juguetes",
+  "specifics": [
+    "Figuras de Acción",
+    "Juguetes Vintage",
+    "Sets de LEGO",
+    "Funko Pops"
+  ]
+},
+{
+  "_id": {
+    "$oid": "68228b0a9fbfca13b6cc31a5"
+  },
+  "category": "Juegos de Mesa",
+  "specifics": [
+    "Los Colonos de Catán",
+    "Aventureros al Tren",
+    "Pandemic",
+    "Carcassonne",
+    "Juegos de Mesa de Dungeons & Dragons",
+    "Juegos de Mesa Argentinos"
+  ]
+},
+{
+  "_id": {
+    "$oid": "68228b0a9fbfca13b6cc31a6"
+  },
+  "category": "Miniaturas",
+  "specifics": [
+    "Warhammer 40,000",
+    "Warhammer Age of Sigmar",
+    "Star Wars: Legion",
+    "Infinity",
+    "Malifaux",
+    "Miniaturas Pintadas a Mano"
+  ]
+}]

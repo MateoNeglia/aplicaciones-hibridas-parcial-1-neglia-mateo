@@ -1,0 +1,486 @@
+[{
+  "_id": {
+    "$oid": "6823a76ebe2af91dad9d6c4d"
+  },
+  "owner": {
+    "$oid": "68238db42f30018201fa074e"
+  },
+  "niche": {
+    "category": "TCG",
+    "specific": "Magic: The Gathering"
+  },
+  "year": 2021,
+  "name": "Nazgûl",
+  "description": "TEST NAXGUL",
+  "condition": "Casi Perfecto Estado",
+  "likes": [],
+  "createdAt": {
+    "$date": "2025-05-13T20:11:26.664Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-13T20:11:26.664Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6823ca9c215a0bff23c88875"
+  },
+  "owner": {
+    "$oid": "68238db42f30018201fa074e"
+  },
+  "niche": {
+    "category": "TCG",
+    "specific": "Magic: The Gathering"
+  },
+  "year": 2021,
+  "name": "Nazgûl",
+  "description": "sdasd",
+  "condition": "Perfecto Estado",
+  "set": "asdas",
+  "likes": [],
+  "createdAt": {
+    "$date": "2025-05-13T22:41:32.067Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-13T22:41:32.067Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6824cfb36148d70ff78bedcb"
+  },
+  "owner": {
+    "$oid": "6824cf696148d70ff78bedc1"
+  },
+  "niche": {
+    "category": "TCG",
+    "specific": "Pokémon"
+  },
+  "year": 1995,
+  "name": "Pikachu Ex",
+  "description": "carta de pikachu ex",
+  "condition": "Moderadamente Usado",
+  "set": "pokemon",
+  "likes": [],
+  "createdAt": {
+    "$date": "2025-05-14T17:15:31.768Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-14T17:15:31.768Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6824d0056148d70ff78bedd6"
+  },
+  "owner": {
+    "$oid": "6824cf696148d70ff78bedc1"
+  },
+  "niche": {
+    "category": "TCG",
+    "specific": "Pokémon"
+  },
+  "year": 2021,
+  "name": "Eeve",
+  "description": "Eeve card",
+  "condition": "Perfecto Estado",
+  "set": "Resplandor Astral",
+  "likes": [],
+  "createdAt": {
+    "$date": "2025-05-14T17:16:53.685Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-19T14:21:08.836Z"
+  },
+  "__v": 0,
+  "picture": "https://assets.pokemon.com/static-assets/content-assets/cms2-es-es/img/cards/web/SWSH10/SWSH10_ES_119.png"
+},
+{
+  "_id": {
+    "$oid": "6824d06d6148d70ff78bede7"
+  },
+  "owner": {
+    "$oid": "6824cf696148d70ff78bedc1"
+  },
+  "niche": {
+    "category": "TCG",
+    "specific": "Magic: The Gathering"
+  },
+  "year": 2021,
+  "name": "Nazgûl",
+  "description": "es foil!",
+  "condition": "Perfecto Estado",
+  "set": "LOTR",
+  "likes": [],
+  "createdAt": {
+    "$date": "2025-05-14T17:18:37.155Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-14T17:18:37.155Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6825251de5eeae8a0e5098cc"
+  },
+  "owner": {
+    "$oid": "68238db42f30018201fa074e"
+  },
+  "niche": {
+    "category": "Cómics",
+    "specific": "DC"
+  },
+  "year": 2021,
+  "name": "Prueba",
+  "description": "prueba prueba",
+  "condition": "Perfecto Estado",
+  "set": "LOTR",
+  "likes": [],
+  "createdAt": {
+    "$date": "2025-05-14T23:19:57.690Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-14T23:19:57.690Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "682541611ca9f187fb674e90"
+  },
+  "owner": {
+    "$oid": "68238db42f30018201fa074e"
+  },
+  "niche": {
+    "category": "TCG",
+    "specific": "Magic: The Gathering"
+  },
+  "year": 2021,
+  "name": "Lord of the Nazgûl",
+  "condition": "Perfecto Estado",
+  "set": "LOTR",
+  "likes": [],
+  "createdAt": {
+    "$date": "2025-05-15T01:20:33.869Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-18T16:25:52.987Z"
+  },
+  "__v": 0,
+  "description": "esta es una descripcion nueva",
+  "picture": "https://cdn11.bigcommerce.com/s-3b5vpig99v/images/stencil/500x659/products/615586/1390525/LordOfTheNazgul467__60030.1720819549.jpg"
+},
+{
+  "_id": {
+    "$oid": "68254bf31ca9f187fb67504d"
+  },
+  "owner": {
+    "$oid": "6824cf696148d70ff78bedc1"
+  },
+  "niche": {
+    "category": "Deportes",
+    "specific": "Artículos de Fútbol"
+  },
+  "year": 1986,
+  "name": "Remera del diego",
+  "description": "REMERA UNICA USADA POR EL DIEGO",
+  "condition": "Ligeramente Usado",
+  "set": "1986",
+  "likes": [],
+  "createdAt": {
+    "$date": "2025-05-15T02:05:39.986Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-15T02:05:39.986Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68254d871ca9f187fb6750a5"
+  },
+  "owner": {
+    "$oid": "6824cf696148d70ff78bedc1"
+  },
+  "niche": {
+    "category": "Deportes",
+    "specific": "Artículos de Fútbol"
+  },
+  "year": 2022,
+  "name": "REMERA DE MESSI",
+  "description": "Remera de Argentina Campeón",
+  "condition": "Moderadamente Usado",
+  "set": "2022",
+  "picture": "https://www.usatoday.com/gcdn/authoring/authoring-images/2023/11/20/USAT/71660748007-lionel-messi-with-the-2022-fifa-world-cup-finals-shirt-france-back-courtesy-of-sam-robles-photography.jpg",
+  "likes": [],
+  "createdAt": {
+    "$date": "2025-05-15T02:12:23.284Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-19T14:22:29.430Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68289c2073d3850c7481df26"
+  },
+  "owner": {
+    "$oid": "6827dc9a61ebb774b5ea3811"
+  },
+  "niche": {
+    "category": "Juguetes",
+    "specific": "Figuras de Acción"
+  },
+  "year": 1995,
+  "name": "Figura de Acción de Gambito",
+  "description": "Figura en perfecto estado",
+  "condition": "Perfecto Estado",
+  "set": "New Xmen",
+  "picture": "https://i5.walmartimages.com/seo/Marvel-Legends-Series-Gambit-6-inch-Collectible-Action-Figure-Toy_87bffcbb-c069-4ada-a402-addd48681c20.34f7e6ce5b7cbaf56a767f4d646396b7.jpeg",
+  "likes": [],
+  "createdAt": {
+    "$date": "2025-05-17T14:24:32.765Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-17T14:24:32.765Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68289d1473d3850c7481df53"
+  },
+  "owner": {
+    "$oid": "6827dc9a61ebb774b5ea3811"
+  },
+  "niche": {
+    "category": "Juguetes",
+    "specific": "Figuras de Acción"
+  },
+  "year": 2021,
+  "name": "McFarlane Toys - John Constantine",
+  "description": "Figura de Constantine en buen estado",
+  "condition": "Casi Perfecto Estado",
+  "set": "McFarlane",
+  "picture": "https://www.mubis.es/media/users/18706/293459/constantine-figura-original.jpg",
+  "likes": [],
+  "createdAt": {
+    "$date": "2025-05-17T14:28:36.522Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-19T00:34:49.714Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68289eae73d3850c7481df5f"
+  },
+  "owner": {
+    "$oid": "6827dc9a61ebb774b5ea3811"
+  },
+  "niche": {
+    "category": "TCG",
+    "specific": "Magic: The Gathering"
+  },
+  "year": 2023,
+  "name": "Evacuation",
+  "description": "carta de magic ligeramente usada",
+  "condition": "Ligeramente Usado",
+  "set": "Commanders Masters",
+  "picture": "https://cdn11.bigcommerce.com/s-3b5vpig99v/images/stencil/500x659/products/607416/1341996/Evacuation__12096.1703088973.jpg",
+  "likes": [],
+  "createdAt": {
+    "$date": "2025-05-17T14:35:26.429Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-17T14:35:26.429Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6828fd6159e543e60175b660"
+  },
+  "owner": {
+    "$oid": "68238db42f30018201fa074e"
+  },
+  "niche": {
+    "category": "TCG",
+    "specific": "Magic: The Gathering"
+  },
+  "year": 2021,
+  "name": "Evacuation",
+  "description": "Carta evacuation mono azul de mtg",
+  "condition": "Moderadamente Usado",
+  "set": "Commanders Masters",
+  "picture": "https://cdn11.bigcommerce.com/s-3b5vpig99v/images/stencil/500x659/products/607416/1341996/Evacuation__12096.1703088973.jpg",
+  "likes": [],
+  "createdAt": {
+    "$date": "2025-05-17T21:19:29.217Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-17T21:19:29.217Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "682b5d8a9b261b6c930d8b8b"
+  },
+  "owner": {
+    "$oid": "6824cf696148d70ff78bedc1"
+  },
+  "niche": {
+    "category": "TCG",
+    "specific": "Pokémon"
+  },
+  "year": 1995,
+  "name": "Pikachu Ex",
+  "description": "30 daños por cada pokemon en el banco",
+  "condition": "Perfecto Estado",
+  "set": "TCG poket",
+  "picture": "https://images.wikidexcdn.net/mwuploads/wikidex/1/16/latest/20250506164028/Pikachu_ex_%28Genes_Formidables_96_TCG_Pocket%29.png",
+  "likes": [],
+  "createdAt": {
+    "$date": "2025-05-19T16:34:18.499Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-19T16:34:18.499Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "682b89203df03414e0bac55e"
+  },
+  "owner": {
+    "$oid": "6827dc9a61ebb774b5ea3811"
+  },
+  "niche": {
+    "category": "Miniaturas",
+    "specific": "Miniaturas Pintadas a Mano"
+  },
+  "year": 2021,
+  "name": "Space Marine De Warhammer 40k",
+  "description": "Es un space marine pintado bellísimo",
+  "condition": "Perfecto Estado",
+  "set": "Minis de 40k",
+  "picture": "https://i.ebayimg.com/images/g/9KoAAOSwT1Fk2nD6/s-l1200.jpg",
+  "likes": [],
+  "createdAt": {
+    "$date": "2025-05-19T19:40:16.375Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-19T19:40:16.375Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "682b89983df03414e0bac5ab"
+  },
+  "owner": {
+    "$oid": "6827dc9a61ebb774b5ea3811"
+  },
+  "niche": {
+    "category": "TCG",
+    "specific": "Magic: The Gathering"
+  },
+  "year": 2021,
+  "name": "Nazgûl",
+  "description": "Carta de colección del set de lotr",
+  "condition": "Moderadamente Usado",
+  "set": "LOTR",
+  "picture": "https://cards.scryfall.io/large/front/a/9/a92d5a03-a4c9-4432-b3bb-f5bb21f65db0.jpg",
+  "likes": [],
+  "createdAt": {
+    "$date": "2025-05-19T19:42:16.258Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-19T19:42:16.258Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "682b89f33df03414e0bac5d3"
+  },
+  "owner": {
+    "$oid": "6827dcc861ebb774b5ea3817"
+  },
+  "niche": {
+    "category": "TCG",
+    "specific": "Magic: The Gathering"
+  },
+  "year": 2021,
+  "name": "Nazgûl",
+  "description": "Carta para el set de las 9",
+  "condition": "Muy Usado",
+  "set": "LOTR",
+  "picture": "https://cards.scryfall.io/large/front/a/9/a92d5a03-a4c9-4432-b3bb-f5bb21f65db0.jpg",
+  "likes": [],
+  "createdAt": {
+    "$date": "2025-05-19T19:43:47.341Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-19T19:43:47.341Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "682b8c7f3df03414e0bac621"
+  },
+  "owner": {
+    "$oid": "6827dcc861ebb774b5ea3817"
+  },
+  "niche": {
+    "category": "TCG",
+    "specific": "Pokémon"
+  },
+  "year": 1995,
+  "name": "Pikachu Ex",
+  "condition": "Desgastado",
+  "set": "pokemon",
+  "picture": "https://images.wikidexcdn.net/mwuploads/wikidex/1/16/latest/20250506164028/Pikachu_ex_%28Genes_Formidables_96_TCG_Pocket%29.png",
+  "likes": [],
+  "createdAt": {
+    "$date": "2025-05-19T19:54:39.013Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-19T19:54:39.013Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "682b8ce43df03414e0bac64a"
+  },
+  "owner": {
+    "$oid": "6827dcc861ebb774b5ea3817"
+  },
+  "niche": {
+    "category": "TCG",
+    "specific": "Pokémon"
+  },
+  "year": 1995,
+  "name": "Pikachu Ex",
+  "description": "mi otra carta de pikachu",
+  "condition": "Casi Perfecto Estado",
+  "set": "pokimun",
+  "picture": "https://images.wikidexcdn.net/mwuploads/wikidex/1/16/latest/20250506164028/Pikachu_ex_%28Genes_Formidables_96_TCG_Pocket%29.png",
+  "likes": [],
+  "createdAt": {
+    "$date": "2025-05-19T19:56:20.905Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-19T19:56:20.905Z"
+  },
+  "__v": 0
+}]

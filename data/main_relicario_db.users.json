@@ -1,0 +1,376 @@
+[{
+  "_id": {
+    "$oid": "68238db42f30018201fa074e"
+  },
+  "name": "Admin",
+  "lastname": "User",
+  "username": "adminuser",
+  "email": "admin@example.com",
+  "password": "$2b$10$tAYrSjpfrRJd.FWmSxxDcO8Gb5qFQJ2.1fc9xynsHhXTiYK.Qe0Xm",
+  "location": {
+    "city": "",
+    "country": ""
+  },
+  "rating": 0,
+  "role": "admin",
+  "niches": [
+    {
+      "category": "Cómics",
+      "specific": "DC",
+      "isCustom": false,
+      "_id": {
+        "$oid": "6823951d2f30018201fa076e"
+      }
+    },
+    {
+      "category": "TCG",
+      "specific": "Magic: The Gathering",
+      "isCustom": false,
+      "_id": {
+        "$oid": "682395a92f30018201fa0772"
+      }
+    },
+    {
+      "category": "TCG",
+      "specific": "Yu-Gi-Oh!",
+      "isCustom": false,
+      "_id": {
+        "$oid": "6823caed215a0bff23c88880"
+      }
+    }
+  ],
+  "reliquaryLists": [
+    {
+      "niche": {
+        "category": "TCG",
+        "specific": "Magic: The Gathering"
+      },
+      "relics": [
+        {
+          "$oid": "682541611ca9f187fb674e90"
+        },
+        {
+          "$oid": "6828fd6159e543e60175b660"
+        }
+      ],
+      "_id": {
+        "$oid": "6823ca9c215a0bff23c88878"
+      }
+    },
+    {
+      "niche": {
+        "category": "Cómics",
+        "specific": "DC"
+      },
+      "relics": [],
+      "_id": {
+        "$oid": "6825251de5eeae8a0e5098cf"
+      }
+    }
+  ],
+  "createdAt": {
+    "$date": "2025-05-13T18:21:40.693Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-17T21:19:29.224Z"
+  },
+  "__v": 8
+},
+{
+  "_id": {
+    "$oid": "6824cf696148d70ff78bedc1"
+  },
+  "name": "Test1",
+  "lastname": "Test",
+  "username": "testuser2",
+  "email": "test@mytest.com",
+  "password": "$2b$10$uyRK3CsddmDRU5DZNxy5ten7TeY45u0f1YzroGrwWI6ZqwvBc5.g2",
+  "location": {
+    "city": "",
+    "country": ""
+  },
+  "rating": 0,
+  "role": "user",
+  "niches": [
+    {
+      "category": "TCG",
+      "specific": "Pokémon",
+      "isCustom": false,
+      "_id": {
+        "$oid": "6824cf766148d70ff78bedc6"
+      }
+    },
+    {
+      "category": "TCG",
+      "specific": "Magic: The Gathering",
+      "isCustom": false,
+      "_id": {
+        "$oid": "6824d0526148d70ff78bedde"
+      }
+    },
+    {
+      "category": "Deportes",
+      "specific": "Artículos de Fútbol",
+      "isCustom": false,
+      "_id": {
+        "$oid": "68254bce1ca9f187fb675040"
+      }
+    }
+  ],
+  "reliquaryLists": [
+    {
+      "niche": {
+        "category": "TCG",
+        "specific": "Pokémon"
+      },
+      "relics": [
+        {
+          "$oid": "6824d0056148d70ff78bedd6"
+        },
+        {
+          "$oid": "682b5d8a9b261b6c930d8b8b"
+        }
+      ],
+      "_id": {
+        "$oid": "6824cfb36148d70ff78bedce"
+      }
+    },
+    {
+      "niche": {
+        "category": "TCG",
+        "specific": "Magic: The Gathering"
+      },
+      "relics": [],
+      "_id": {
+        "$oid": "6824d06d6148d70ff78bedea"
+      }
+    },
+    {
+      "niche": {
+        "category": "Deportes",
+        "specific": "Artículos de Fútbol"
+      },
+      "relics": [
+        {
+          "$oid": "68254d871ca9f187fb6750a5"
+        }
+      ],
+      "_id": {
+        "$oid": "68254bf31ca9f187fb675050"
+      }
+    }
+  ],
+  "createdAt": {
+    "$date": "2025-05-14T17:14:17.883Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-19T18:29:07.192Z"
+  },
+  "__v": 21
+},
+{
+  "_id": {
+    "$oid": "6827dc9a61ebb774b5ea3811"
+  },
+  "name": "Test",
+  "lastname": "Cero",
+  "username": "testuser",
+  "email": "test0@mytest.com",
+  "password": "$2b$10$hPXysP9ODsrvEUMzRgQozuoujJ9ViAi5Hjxc7xsfrDlNhuqkC.mc.",
+  "location": {
+    "city": "",
+    "country": ""
+  },
+  "rating": 0,
+  "role": "user",
+  "niches": [
+    {
+      "category": "Juguetes",
+      "specific": "Figuras de Acción",
+      "isCustom": false,
+      "_id": {
+        "$oid": "682894c473d3850c7481ded3"
+      }
+    },
+    {
+      "category": "Miniaturas",
+      "specific": "Miniaturas Pintadas a Mano",
+      "isCustom": false,
+      "_id": {
+        "$oid": "682894d573d3850c7481ded7"
+      }
+    },
+    {
+      "category": "TCG",
+      "specific": "Magic: The Gathering",
+      "isCustom": false,
+      "_id": {
+        "$oid": "682894e273d3850c7481dedd"
+      }
+    }
+  ],
+  "reliquaryLists": [
+    {
+      "niche": {
+        "category": "Juguetes",
+        "specific": "Figuras de Acción"
+      },
+      "relics": [
+        {
+          "$oid": "68289d1473d3850c7481df53"
+        }
+      ],
+      "_id": {
+        "$oid": "68289c2073d3850c7481df29"
+      }
+    },
+    {
+      "niche": {
+        "category": "TCG",
+        "specific": "Magic: The Gathering"
+      },
+      "relics": [
+        {
+          "$oid": "682b89983df03414e0bac5ab"
+        }
+      ],
+      "_id": {
+        "$oid": "68289eae73d3850c7481df62"
+      }
+    },
+    {
+      "niche": {
+        "category": "Miniaturas",
+        "specific": "Miniaturas Pintadas a Mano"
+      },
+      "relics": [],
+      "_id": {
+        "$oid": "682b89203df03414e0bac561"
+      }
+    }
+  ],
+  "createdAt": {
+    "$date": "2025-05-17T00:47:22.564Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-19T19:42:16.262Z"
+  },
+  "__v": 5
+},
+{
+  "_id": {
+    "$oid": "6827dcc861ebb774b5ea3817"
+  },
+  "name": "Test",
+  "lastname": "The Third",
+  "username": "testuser3",
+  "email": "test3@mytest.com",
+  "password": "$2b$10$XaTe7Zox/Ek8r9GdRg0R1e7vKMh0CEEFqaocdJO3FQifMjXyjcAKC",
+  "location": {
+    "city": "",
+    "country": ""
+  },
+  "rating": 0,
+  "role": "user",
+  "niches": [
+    {
+      "category": "TCG",
+      "specific": "Magic: The Gathering",
+      "isCustom": false,
+      "_id": {
+        "$oid": "682b8c543df03414e0bac617"
+      }
+    },
+    {
+      "category": "TCG",
+      "specific": "Pokémon",
+      "isCustom": false,
+      "_id": {
+        "$oid": "682b8c543df03414e0bac618"
+      }
+    }
+  ],
+  "reliquaryLists": [
+    {
+      "niche": {
+        "category": "TCG",
+        "specific": "Magic: The Gathering"
+      },
+      "relics": [],
+      "_id": {
+        "$oid": "682b89f33df03414e0bac5d6"
+      }
+    },
+    {
+      "niche": {
+        "category": "TCG",
+        "specific": "Pokémon"
+      },
+      "relics": [
+        {
+          "$oid": "682b8ce43df03414e0bac64a"
+        }
+      ],
+      "_id": {
+        "$oid": "682b8c7f3df03414e0bac624"
+      }
+    }
+  ],
+  "createdAt": {
+    "$date": "2025-05-17T00:48:08.129Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-19T19:56:20.908Z"
+  },
+  "__v": 3
+},
+{
+  "_id": {
+    "$oid": "6827dd0061ebb774b5ea381d"
+  },
+  "name": "Test",
+  "lastname": "The Fourth",
+  "username": "testuser4",
+  "email": "test4@mytest.com",
+  "password": "$2b$10$Jkqt6GDJ5L41VIuOCZyaN.xhysqFOYoZC01/P/8DopsdKuQCnPGra",
+  "location": {
+    "city": "",
+    "country": ""
+  },
+  "rating": 0,
+  "role": "user",
+  "niches": [],
+  "reliquaryLists": [],
+  "createdAt": {
+    "$date": "2025-05-17T00:49:04.791Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-17T00:49:04.791Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6827dd4f61ebb774b5ea3826"
+  },
+  "name": "Test",
+  "lastname": "The Fifth",
+  "username": "testuser5",
+  "email": "test5@mytest.com",
+  "password": "$2b$10$RdLicHb4eZCzfz1dIL2iBOjyUP/vKOG7AmCZBVBbqOjWa8m6l1LQG",
+  "location": {
+    "city": "",
+    "country": ""
+  },
+  "rating": 0,
+  "role": "user",
+  "niches": [],
+  "reliquaryLists": [],
+  "createdAt": {
+    "$date": "2025-05-17T00:50:23.538Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-17T00:50:23.538Z"
+  },
+  "__v": 0
+}]

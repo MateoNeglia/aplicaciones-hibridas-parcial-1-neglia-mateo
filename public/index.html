@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">  
+  <link rel="stylesheet" href="./css/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Relicario BE</title>  
+</head>
+<body>
+  <header>
+    <h1>Bienvenido a la API de Relicario</h1>
+  </header>
+  <main>
+    <p>Relicario es una aplicación dedicada a la compra y venta de coleccionables, donde los usuarios pueden registrarse, iniciar sesión y buscar coleccionables por nicho.</p>
+    <p>La API está diseñada para ser utilizada por la aplicación móvil y web de Relicario, permitiendo a los usuarios interactuar con la plataforma de manera eficiente.</p>
+    
+    
+    <p>Este es el servicio Backend para la APP Relicario, provee APIS para el manejo de usuarios, autenticación, y el manejo de Nichos y Relicarios además de la búsqueda de Coleccionables</p>
+    
+    <p><b>IMPORTANTE: Para Correr la APP desde el front bajarse el siguiente <a href="https://github.com/MateoNeglia/aplicaciones-hibridas-parcial1-front-de-prueba.git">REPO</a> y seguir las instrucciones.</b></p>
+    
+    <h2>Endpoints</h2>
+    <ul>
+      <li>
+        <strong>POST</strong> /api/auth/register
+        <p><strong>DESCRIPCIÓN:</strong> Registra una nueva cuenta.</p>
+        <p><strong>Requerimientos del Request:</strong></p>
+        <ul>
+          <li><strong>Body (JSON):</strong>
+            <pre><code>
+{
+  "name": "string (min 2 chars, non-numeric)",
+  "lastname": "string (min 2 chars, non-numeric)",
+  "username": "string (3-30 chars)",
+  "email": "string (valid email)",
+  "password": "string (min 6 chars)",
+  "role": "string (optional, 'user' or 'admin', default: 'user')"
+}
+            </code></pre>
+          </li>
+        </ul>
+        <p><strong>Respuestas esperadas:</strong></p>
+        <ul>
+          <li><strong>201 Created:</strong> User created successfully.
+            <pre><code>
+{
+  "user": {
+    "_id": "string",
+    "name": "string",
+    "lastname": "string",
+    "username": "string",
+    "email": "string",
+    "role": "string"
+  },
+  "accessToken": "string",
+  "refreshToken": "string"
+}
+            </code></pre>
+          </li>
+          <li><strong>400 Bad Request:</strong> Invalid input (e.g., missing fields, numeric-only name).
+            <pre><code>
+{
+  "message": "El nombre no puede ser solo números, El correo es obligatorio"
+}
+            </code></pre>
+          </li>
+          <li><strong>409 Conflict:</strong> Email or username already exists.
+            <pre><code>
+{
+  "message": "Email or username already exists"
+}
+            </code></pre>
+          </li>
+        </ul>
+      </li>
+      
+      <li>
+        <strong>POST</strong> /api/auth/login
+        <p><strong>DESCRIPCIÓN:</strong> Autentica al usuario y devuelve un access y refresh token.</p>
+        <p><strong>Requerimientos del Request:</strong></p>
+        <ul>
+          <li><strong>Body (JSON):</strong>
+            <pre><code>
+{
+  "identifier": "string (email or username)",
+  "password": "string"
+}
+            </code></pre>
+          </li>
+        </ul>
+        <p><strong>Respuestas esperadas:</strong></p>
+        <ul>
+          <li><strong>200 OK:</strong> Login successful.
+            <pre><code>
+{
+"user": {
+"_id": "string",
+"name": "string",
+"lastname": "string",
+"username": "string",
+"email": "string",
+"role": "string"
+},
+"accessToken": "string",
+"refreshToken": "string"
+}
+            </code></pre>
+          </li>
+          <li><strong>400 Bad Request:</strong> Missing or invalid fields.
+            <pre><code>
+{
+  "message": "El correo o nombre de usuario es obligatorio, La contraseña es obligatoria"
+}
+            </code></pre>
+          </li>
+          <li><strong>401 Unauthorized:</strong> Invalid credentials.
+            <pre><code>
+{
+  "message": "Invalid identifier or password"
+}
+            </code></pre>
+          </li>
+        </ul>
+      </li>        
+
+      <li>
+        <strong>DELETE</strong> /api/auth/users/:id
+        <p><strong>DESCRIPCIÓN:</strong> Borra a un Usuario por ID, sólo puede ser accedido por el mismo usuario a borrarse o el admin.</p>
+        <p><strong>Requerimientos del Request:</strong></p>
+        <ul>
+          <li><strong>Params:</strong> <code>id</code> (MongoDB ObjectId)</li>
+          <li><strong>Headers:</strong> <code>Authorization: Bearer &lt;token&gt;</code></li>
+        </ul>
+        <p><strong>Respuestas esperadas:</strong></p>
+        <ul>
+          <li><strong>204 No Content:</strong> User deleted successfully.</li>
+          <li><strong>401 Unauthorized:</strong> Missing or invalid token.
+            <pre><code>
+{
+  "message": "Authentication required"
+}
+            </code></pre>
+          </li>
+          <li><strong>403 Forbidden:</strong> Non-admin user.
+            <pre><code>
+{
+  "message": "Admin access required"
+}
+            </code></pre>
+          </li>
+          <li><strong>404 Not Found:</strong> User not found.
+            <pre><code>
+{
+  "message": "User not found"
+}
+            </code></pre>
+          </li>
+        </ul>
+      </li>
+      
+      <li>
+        <strong>GET</strong> /api/v1/niche/niches
+        <p><strong>DESCRIPCIÓN:</strong> Trae la lista de objetos Nicho.</p>
+        <p><strong>Requerimientos del Request:</strong></p>
+        <ul>
+          <li>Ninguno (public endpoint)</li>
+        </ul>
+        <p><strong>Respuestas esperadas:</strong></p>
+        <ul>
+          <li><strong>200 OK:</strong> List of niches returned.
+            <pre><code>
+[
+  {
+    "category": "TCG",
+    "specifics": ["Magic: The Gathering", "Pokémon", "Yu-Gi-Oh!", "Cardfight!! Vanguard", "Juego de Cartas Digimon"]
+  },
+  {
+    "category": "Deportes",
+    "specifics": ["Artículos de Fútbol", "Tarjetas de Béisbol", "Camisetas de Baloncesto", "Coleccionables de Hockey", "Tarjetas de Fútbol"]
+  },
+  {
+    "category": "Cómics",
+    "specifics": ["Marvel", "DC", "Manga", "Cómics Independientes", "Novelas Gráficas"]
+  },
+  {
+    "category": "Monedas",
+    "specifics": ["Monedas Históricas", "Monedas Conmemorativas", "Monedas de Lingotes", "Pesos Argentinos"]
+  },
+  {
+    "category": "Estampillas",
+    "specifics": ["Estampillas Vintage", "Estampillas Temáticas", "Estampillas Internacionales", "Estampillas Argentinas"]
+  },
+  {
+    "category": "Juguetes",
+    "specifics": ["Figuras de Acción", "Juguetes Vintage", "Sets de LEGO", "Funko Pops"]
+  },
+  {
+    "category": "Juegos de Mesa",
+    "specifics": ["Los Colonos de Catán", "Aventureros al Tren", "Pandemic", "Carcassonne", "Juegos de Mesa de Dungeons & Dragons", "Juegos de Mesa Argentinos"]
+  },
+  {
+    "category": "Miniaturas",
+    "specifics": ["Warhammer 40,000", "Warhammer Age of Sigmar", "Star Wars: Legion", "Infinity", "Malifaux", "Miniaturas Pintadas a Mano"]
+  }
+]
+            </code></pre>
+          </li>
+          <li><strong>500 Internal Server Error:</strong> Failed to fetch niches.
+            <pre><code>
+{
+  "message": "Failed to load niches"
+}
+            </code></pre>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </main>
+  <footer>
+    <ul>
+      <li>Nombre y Apellido: Mateo Neglia</li>
+      <li>Nombre de la materia: Aplicaciones Híbridas</li>
+      <li>Nombre del docente: MARCOS GALBÁN, Camila Belén</li>
+      <li>Comisión: DWN4AV</li>
+      <li>Fecha de entrega: 19-05-2025</li>
+    </ul>
+  </footer>
+</body>
+</html>
