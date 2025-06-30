@@ -202,16 +202,128 @@ const likeRelic = async (req, res, next) => {
 //* para hacer más fácil la lectura y entendimiento de lo que hace cada parte cuando se le tenga que hacer alguna modificación
 //* o update en el futuro. También es la lógica más compleja y central de la APP :)
 //*
+//--andando
+// const getRelics = async (req, res, next) => {
+//   try {
+//     const { page = 1, limit = 6, category, specific, condition, name, sortBy = 'createdAt', order = 'desc' } = req.query;
+
+//     //Acá estás creando el objeto query para el filtrado
+//     const query = {};
+//     if (category) query['niche.category'] = category;
+//     if (specific) query['niche.specific'] = specific;
+//     if (condition) query.condition = condition;
+//     if (name) query.name = { $regex: name, $options: 'i' };
+
+//     //Acá estas armando el setup de la paginacion
+//     const pageNum = parseInt(page, 10);
+//     const limitNum = parseInt(limit, 10);
+//     const skip = (pageNum - 1) * limitNum;
+
+//     //Acá estas definiendo el orden que se tiene que aplicar para el campo condition
+//     const conditionOrder = [
+//       'Perfecto Estado',
+//       'Casi Perfecto Estado',
+//       'Ligeramente Usado',
+//       'Moderadamente Usado',
+//       'Muy Usado',
+//       'Desgastado',
+//       'Dañado',
+//     ];
+
+
+//     //Y este es un objeto donde estamos armando el mapeo que vamos a usar para los campos que estamos metiendo en el sort
+//     const sortByMapping = {
+//       createdAt: 'createdAt',
+//       updatedAt: 'updatedAt',
+//       likes: 'likesCount',
+//       ownerName: 'owner.username',
+//       year: 'year',
+//       set: 'set',
+//       condition: 'conditionOrder',
+//       name: 'name',
+//     };
+
+//     //Acá estamos validando el sortBy y el order
+    
+//     const allowedSortBy = Object.keys(sortByMapping);
+//     const selectedSortBy = allowedSortBy.includes(sortBy) ? sortBy : 'createdAt';
+//     const selectedOrder = ['asc', 'desc'].includes(order) ? order : 'desc';
+//     const sortField = sortByMapping[selectedSortBy];
+//     const sortOrder = selectedOrder === 'asc' ? 1 : -1;
+
+//     //El pipeline de lo que agregaste que se va a buscar en la base de datos
+//     const pipeline = [
+//       { $match: query },
+//       {
+//         $lookup: {
+//           from: 'users',
+//           localField: 'owner',
+//           foreignField: '_id',
+//           as: 'owner',
+//         },
+//       },
+//       { $unwind: '$owner' }, // pasa de un array a un objeto
+//       {
+//         $addFields: {
+//           likesCount: { $size: '$likes' }, // agrega el campo likesCount para contar los likes
+//           conditionOrder: {
+//             $indexOfArray: [conditionOrder, '$condition'], //mapea la condición de a cuerdo q lo que declaraste más arriba
+//           },
+//         },
+//       },
+//       { $sort: { [sortField]: sortOrder } }, // el orden que se va a aplicar el sort
+//       { $skip: skip },                        // el skip de la paginacion
+//       { $limit: limitNum },                   //el límite de la paginacion
+//     ];
+
+//     //ejecuta el pipeline
+//     const relics = await Relic.aggregate(pipeline).exec();
+
+//     //Acá estás contando el total de documentos que cumplen con la query :)
+//     const total = await Relic.countDocuments(query);
+
+//     //y finalmente devolves el resultado para el buscador delfront :)
+//     res.status(200).json({
+//       relics,
+//       pagination: {
+//         page: pageNum,
+//         limit: limitNum,
+//         total,
+//         totalPages: Math.ceil(total / limitNum),
+//       },
+//     });
+//   } catch (err) {
+//     next({ status: err.status || 500, message: err.message });
+//   }
+// };
+
 const getRelics = async (req, res, next) => {
   try {
-    const { page = 1, limit = 6, category, specific, condition, name, sortBy = 'createdAt', order = 'desc' } = req.query;
+    const { page = 1, limit = 6, category, specific, condition, name, sortBy = 'createdAt', order = 'desc', recommend } = req.query;
+
+    // Fetch user niches if recommend is true
+    let userNiches = [];
+    if (recommend === 'true' && req.user?._id) {
+      const user = await User.findById(req.user._id).lean();
+      if (user?.niches) {
+        userNiches = user.niches;
+      }
+    }
 
     //Acá estás creando el objeto query para el filtrado
     const query = {};
-    if (category) query['niche.category'] = category;
+    if (category) {
+      query['niche.category'] = category;
+    } else if (recommend === 'true' && userNiches.length > 0) {
+      query['niche.category'] = { $in: userNiches.map(n => n.category) };
+      query['niche.specific'] = { $in: userNiches.map(n => n.specific) };
+    }
     if (specific) query['niche.specific'] = specific;
     if (condition) query.condition = condition;
     if (name) query.name = { $regex: name, $options: 'i' };
+    if (recommend === 'true' && req.user?._id) {
+      query.owner = { $ne: req.user._id }; // Exclude current user's relics
+    }
 
     //Acá estas armando el setup de la paginacion
     const pageNum = parseInt(page, 10);
@@ -229,7 +341,6 @@ const getRelics = async (req, res, next) => {
       'Dañado',
     ];
 
-
     //Y este es un objeto donde estamos armando el mapeo que vamos a usar para los campos que estamos metiendo en el sort
     const sortByMapping = {
       createdAt: 'createdAt',
@@ -243,7 +354,6 @@ const getRelics = async (req, res, next) => {
     };
 
     //Acá estamos validando el sortBy y el order
-    
     const allowedSortBy = Object.keys(sortByMapping);
     const selectedSortBy = allowedSortBy.includes(sortBy) ? sortBy : 'createdAt';
     const selectedOrder = ['asc', 'desc'].includes(order) ? order : 'desc';
@@ -295,6 +405,9 @@ const getRelics = async (req, res, next) => {
     next({ status: err.status || 500, message: err.message });
   }
 };
+
+
+
 
 //---------------------------------------------------------------//
 // New suggestions endpoint
