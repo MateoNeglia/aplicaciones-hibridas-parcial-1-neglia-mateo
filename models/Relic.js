@@ -5,7 +5,7 @@ const relicSchema = new mongoose.Schema(
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true, 
+      required: true,
     },
     niche: {
       category: {
@@ -63,10 +63,10 @@ const relicSchema = new mongoose.Schema(
       trim: true,
       validate: {
         validator: function (value) {
-          if (!value) return true;
-          return /^(https?:\/\/([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?|[\/][\w-\/]*\.(jpeg|jpg|png))$/i.test(value);
+          if (!value) return true;          
+          return /^(\/Uploads\/[\w\s-]+\.[\w]+|https?:\/\/([\w-]+\.)+[\w-]+(\/[\w\s-./?%&=]*)?\.[\w]+)$/i.test(value);
         },
-        message: 'Formato de imagen inválido', 
+        message: 'Formato de imagen inválido. Debe ser una ruta local (/uploads/filename.ext) o URL válida (http(s)://.../filename.ext).',
       },
     },
     likes: [

@@ -5,14 +5,16 @@ import {
   refreshAccessToken,
   getUserProfile,
   updateUserProfile,
-  deleteUser, 
+  addUserReview,
+  deleteUser,
 } from '../services/authService.js';
-import { validateUserCreation, validateLogin, validateUserUpdate } from '../validations/userValidations.js';
+import { validateUserCreation, validateLogin, validateUserUpdate, validateUserReview } from '../validations/userValidations.js';
+import multer from 'multer';
 
+const upload = multer({ dest: 'uploads/' });
 
 const register = async (req, res, next) => {
   try {
-    //estoy validando el body que me llegó en el request usando la validación que hice en Joi
     const { error } = validateUserCreation(req.body);
     if (error) {
       return res.status(400).json({
@@ -20,9 +22,9 @@ const register = async (req, res, next) => {
       });
     }
 
-    const { name, lastname, username, email, password, role } = req.body;
+    const { username, email, password, role } = req.body;
 
-    const result = await registerUser({ name, lastname, username, email, password, role });
+    const result = await registerUser({ username, email, password, role });
 
     res.status(201).json(result);
   } catch (err) {
@@ -32,15 +34,13 @@ const register = async (req, res, next) => {
 
 const login = async (req, res, next) => {
   try {
-    
     const { error } = validateLogin(req.body);
-    if (error) {
-      console.log('Validation errors:', error.details);
+    if (error) {      
       return res.status(400).json({
         message: error.details.map((detail) => detail.message).join(', '),
       });
     }
-  
+
     const { identifier, password } = req.body;
 
     const result = await loginUser({ identifier, password });
@@ -65,7 +65,7 @@ const refresh = async (req, res, next) => {
   }
 };
 
-const getProfile = async (req, res, next) => {
+const getProfile = async (req, res, next) => {  
   try {
     const user = await getUserProfile(req.user._id);
     res.status(200).json(user);
@@ -76,13 +76,34 @@ const getProfile = async (req, res, next) => {
 
 const updateProfile = async (req, res, next) => {
   try {
-    const { error } = validateUserUpdate(req.body);
+    const updates = req.body;
+    if (req.file) {
+      updates.profilePicture = `/uploads/${req.file.filename}`;
+    }
+    const { error } = validateUserUpdate(updates);
     if (error) {
       return res.status(400).json({
         message: error.details.map((detail) => detail.message).join(', '),
       });
     }
-    const user = await updateUserProfile(req.user._id, req.body);
+    const user = await updateUserProfile(req.user._id, updates);
+    res.status(200).json(user);
+  } catch (err) {
+    next({ status: err.status || 500, message: err.message });
+  }
+};
+
+const addReview = async (req, res, next) => {
+  try {
+    const { error } = validateUserReview(req.body);
+    if (error) {
+      return res.status(400).json({
+        message: error.details.map((detail) => detail.message).join(', '),
+      });
+    }
+    const { targetUserId, rating, comment } = req.body;
+    const reviewerId = req.user._id;
+    const user = await addUserReview(targetUserId, reviewerId, { rating, comment });
     res.status(200).json(user);
   } catch (err) {
     next({ status: err.status || 500, message: err.message });
@@ -91,9 +112,9 @@ const updateProfile = async (req, res, next) => {
 
 const deleteUserController = async (req, res, next) => {
   try {
-    const { userId } = req.params;    
+    const { userId } = req.params;
     const authenticatedUser = await getUserProfile(req.user._id);
-    
+
     if (authenticatedUser._id.toString() !== userId && authenticatedUser.role !== 'admin') {
       return res.status(403).json({ message: 'Forbidden: You can only delete your own account or must be an admin' });
     }
@@ -105,12 +126,9 @@ const deleteUserController = async (req, res, next) => {
   }
 };
 
-
-//El google login es un placeholder, ya que no tengo la implementación de google auth aún
 const googleLogin = async (req, res, next) => {
   try {
-    
-    const { googleId, email, name, lastname } = req.body; 
+    const { googleId, email, name, lastname } = req.body;
     if (!googleId || !email || !name) {
       return res.status(400).json({ message: 'Google ID, email, and name are required' });
     }
@@ -121,12 +139,13 @@ const googleLogin = async (req, res, next) => {
   }
 };
 
-export { 
-  register, 
-  googleLogin, 
-  login, 
-  refresh, 
-  getProfile, 
-  updateProfile, 
-  deleteUserController 
+export {
+  register,
+  googleLogin,
+  login,
+  refresh,
+  getProfile,
+  updateProfile,
+  addReview,
+  deleteUserController,
 };

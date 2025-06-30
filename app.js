@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors'; 
 import routes from './routes/index.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -13,9 +14,28 @@ const port = process.env.PORT || 8080;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// manejo de CORS
+const allowedOrigins = [
+  'http://localhost:3000', 
+  'http://localhost:5173', 
+];
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public'))); 
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); 
 
 // Se conecta a la DB
 const connectDB = async () => {
@@ -37,9 +57,9 @@ app.get('/', (req, res) => {
 });
 
 app.get('/test-error', (req, res, next) => {    
-    const error = new Error('This is a test error!');
-    error.status = 500;
-    next(error);
+  const error = new Error('This is a test error!');
+  error.status = 500;
+  next(error);
 });
 
 // Manejo de errores en las rutas
@@ -56,7 +76,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-//arranca el servidor
+// arranca el servidor
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port} :)`);
 });

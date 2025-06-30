@@ -1,66 +1,75 @@
 import User from '../models/User.js';
 import Relic from '../models/Relic.js';
 
-const createRelic = async (user, {niche, year, name, description, condition, set, picture}) => {
+const createRelic = async (user, req) => {
+  const { niche, name, description, year, condition, set } = req.body;
+  const picture = req.file ? `/uploads/${req.file.filename}` : undefined;
 
-    const relic = new Relic({
-      owner: user._id,
-      niche,
-      year: year ? parseInt(year) : undefined,
-      name,
-      description,
-      condition,
-      set,
-      picture: picture || undefined,
+  const relic = new Relic({
+    owner: user._id,
+    niche,
+    year: year ? parseInt(year) : undefined,
+    name,
+    description: description || undefined,
+    condition: condition || undefined,
+    set: set || undefined,
+    picture,
+  });
+  await relic.save();
+
+  const nicheExistsInUser = user.niches.some(
+    (n) => n.category === niche.category && n.specific === niche.specific
+  );
+  if (!nicheExistsInUser) {
+    user.niches.push({
+      category: niche.category,
+      specific: niche.specific,
     });
-    await relic.save();
+  }
 
-    let reliquaryList = user.reliquaryLists.find(
-      (list) =>
-        list.niche.category === niche.category &&
-        list.niche.specific === niche.specific
-    );
-    if (!reliquaryList) {
-      reliquaryList = {
-        niche: { category: niche.category, specific: niche.specific },
-        relics: [],
-      };
-      user.reliquaryLists.push(reliquaryList);
-    }
+  let reliquaryList = user.reliquaryLists.find(
+    (list) => list.niche.category === niche.category && list.niche.specific === niche.specific
+  );
+  if (!reliquaryList) {
+    user.reliquaryLists.push({
+      niche: { category: niche.category, specific: niche.specific },
+      relics: [relic._id],
+    });
+  } else {
     reliquaryList.relics.push(relic._id);
-    await user.save();
+  }
 
-    return relic;
+  user.markModified('niches');
+  user.markModified('reliquaryLists');
+  await user.save();
+
+  return relic;
 };
 
-const updateRelic = async (relic, userId,  { niche, year, name, description, condition, set, picture }) => {  
-    //hace un update de los cambios si hay
-    relic.name = name;
-    relic.condition = condition;
-    relic.description = description || undefined;
-    relic.year = year ? parseInt(year) : undefined;
-    relic.set = set || undefined;
-    relic.picture = picture || undefined;
+const updateRelic = async (relic, userId, { niche, year, name, description, condition, set, picture }) => {  
+  if (niche) {
+    const user = await User.findById(userId);
+    const nicheExistsInUser = user.niches.some(
+      (n) => n.category === niche.category && n.specific === niche.specific
+    );
+    if (!nicheExistsInUser) {
+      user.niches.push({
+        category: niche.category,
+        specific: niche.specific,
+      });
+      user.markModified('niches');
+    }
 
-    //maneja el cambio de nicho
-    if (niche && (niche.category !== relic.niche.category || niche.specific !== relic.niche.specific)) {
-      const user = await User.findById(userId);
-      
-      //remueve la reliquia de la lista de reliquias anterior
+    if (niche.category !== relic.niche.category || niche.specific !== relic.niche.specific) {
       const oldList = user.reliquaryLists.find(
-        (list) =>
-          list.niche.category === relic.niche.category &&
-          list.niche.specific === relic.niche.specific
+        (list) => list.niche.category === relic.niche.category && list.niche.specific === relic.niche.specific
       );
       if (oldList) {
         oldList.relics = oldList.relics.filter((id) => id.toString() !== relic._id.toString());
       }
 
-      //Agrega la reliquia a la nueva lista
       let newList = user.reliquaryLists.find(
-        (list) =>
-          list.niche.category === niche.category &&
-          list.niche.specific === niche.specific
+        (list) => list.niche.category === niche.category && list.niche.specific === niche.specific
       );
       if (!newList) {
         newList = {
@@ -71,38 +80,38 @@ const updateRelic = async (relic, userId,  { niche, year, name, description, con
       }
       newList.relics.push(relic._id);
 
-      await user.save();
+      user.markModified('reliquaryLists');
       relic.niche = niche;
     }
-    //guarda los cambios realizados en la reliquia
-    await relic.save();
-    
-    return relic;
+    await user.save();
+  }
+
+  relic.name = name || relic.name;
+  relic.condition = condition || relic.condition;
+  relic.description = description || undefined;
+  relic.year = year ? parseInt(year) : relic.year;
+  relic.set = set || relic.set;
+  relic.picture = picture || undefined;
+
+  await relic.save();
+  return relic;
 };
 
 const deleteRelic = async (relicId, userId) => {
-    const user = await User.findById(userId);
-    if (!user) {
-      const error = new Error('User not found');
-      error.status = 404;
-      throw error;
-    }
-    const reliquaryList = user.reliquaryLists.find((list) =>
-      list.relics.includes(relicId)
-    );
-    if (reliquaryList) {
-      reliquaryList.relics = reliquaryList.relics.filter(
-        (id) => id.toString() !== relicId
-      );
-      
-      // user.reliquaryLists = user.reliquaryLists.filter(
-      //   (list) => list.relics.length > 0
-      // );
-      await user.save();
-    }
+  const user = await User.findById(userId);
+  if (!user) {
+    const error = new Error('User not found');
+    error.status = 404;
+    throw error;
+  }
+  const reliquaryList = user.reliquaryLists.find((list) => list.relics.includes(relicId));
+  if (reliquaryList) {
+    reliquaryList.relics = reliquaryList.relics.filter((id) => id.toString() !== relicId);
+    user.markModified('reliquaryLists');
+    await user.save();
+  }
 
-    //borra la reliquia
-    return await Relic.findByIdAndDelete(relicId);
+  return await Relic.findByIdAndDelete(relicId);
 };
 
 export {

@@ -1,50 +1,63 @@
 import User from '../models/User.js';
 import Relic from '../models/Relic.js';
+import Niche from '../models/Niche.js';
 import { createRelic, updateRelic, deleteRelic } from '../services/relicService.js';
 import { validateRelicUpdate, validateRelicCreation } from '../validations/relicValidations.js';
 
 //funciones ABM de reliquias
 const create = async (req, res, next) => {
   try {
-    const { error } = validateRelicCreation(req.body);
+    const relicData = JSON.parse(req.body.relic);
+    const { error } = validateRelicCreation(relicData);
     if (error) {
       return res.status(400).json({ message: error.details.map(d => d.message).join(', ') });
     }
-
-    const { niche } = req.body;
-    const user = await User.findById(req.user._id);
-    if (
-      !user.niches.some(
-        (n) => n.category === niche.category && n.specific === niche.specific
-      )
-    ) {
-      const error = new Error('El usuario debe tener el nicho especificado');
-      error.status = 400;
-      throw error;
+    
+    let niche = await Niche.findOne({ category: relicData.niche.category });
+    if (!niche) {
+      niche = new Niche({
+        category: relicData.niche.category,
+        specifics: [relicData.niche.specific],
+      });
+      await niche.save();
+    } else if (!niche.specifics.includes(relicData.niche.specific)) {
+      niche.specifics.push(relicData.niche.specific);
+      await niche.save();
     }
 
-    const result = await createRelic(user, req.body);
+    const user = await User.findById(req.user._id);
+    const result = await createRelic(user, { ...req, body: relicData });
     res.status(201).json(result);
   } catch (err) {
     next({ status: err.status || 500, message: err.message });
   }
 };
 
-const update = async (req, res, next) => {
+const update = async (req, res, next) => {  
   try {
     const { relicId } = req.params;
     const userId = req.user._id;
+    
+    const updateData = { ...req.body };
 
-    const { error } = validateRelicUpdate(req.body);
-    if (error) {
-      return res.status(400).json({ message: error.details.map(d => d.message).join(', ') });
+    if (req.body['niche[category]'] && req.body['niche[specific]']) {
+      updateData.niche = {
+        category: req.body['niche[category]'],
+        specific: req.body['niche[specific]'],
+      };
     }
-
+    
     const relic = await Relic.findById(relicId);
     if (!relic) {
       const error = new Error('Relic not found');
       error.status = 404;
       throw error;
+    }
+    updateData.picture = req.file ? `/uploads/${req.file.filename}` : (req.body.picture || relic.picture);
+
+    const { error } = validateRelicUpdate(updateData);
+    if (error) {
+      return res.status(400).json({ message: error.details.map(d => d.message).join(', ') });
     }
 
     if (relic.owner.toString() !== userId.toString()) {
@@ -52,22 +65,23 @@ const update = async (req, res, next) => {
       error.status = 403;
       throw error;
     }
-
-    const { niche } = req.body;
-    if (niche) {
-      const user = await User.findById(userId);
-      if (
-        !user.niches.some(
-          (n) => n.category === niche.category && n.specific === niche.specific
-        )
-      ) {
-        const error = new Error('El usuario debe tener el nicho especificado');
-        error.status = 400;
-        throw error;
+    
+    if (updateData.niche) {
+      const niche = updateData.niche;
+      let nicheDoc = await Niche.findOne({ category: niche.category });
+      if (!nicheDoc) {
+        nicheDoc = new Niche({
+          category: niche.category,
+          specifics: [niche.specific],
+        });
+        await nicheDoc.save();
+      } else if (!nicheDoc.specifics.includes(niche.specific)) {
+        nicheDoc.specifics.push(niche.specific);
+        await nicheDoc.save();
       }
     }
 
-    const result = await updateRelic(relic, userId, req.body);
+    const result = await updateRelic(relic, userId, updateData);
     res.status(200).json(result);
   } catch (err) {
     next({ status: err.status || 500, message: err.message });
@@ -283,8 +297,26 @@ const getRelics = async (req, res, next) => {
 };
 
 //---------------------------------------------------------------//
+// New suggestions endpoint
+const getSuggestions = async (req, res, next) => {
+  try {
+    const { query } = req.query;
+    if (!query) {
+      return res.json([]);
+    }
+    const suggestions = await Relic.find({
+      name: { $regex: query, $options: 'i' },
+    })
+      .limit(5)
+      .select('name')
+      .distinct('name')
+      .lean();
+    res.json(suggestions);
+  } catch (err) {
+    next({ status: err.status || 500, message: err.message });
+  }
+};
 
 
 
-
-export { create, update, remove, getUserReliquary, likeRelic, getRelics, getRelicById };
+export { create, update, remove, getUserReliquary, likeRelic, getRelics, getRelicById, getSuggestions };

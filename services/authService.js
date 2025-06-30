@@ -1,45 +1,38 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
-import Relic from '../models/Relic.js'; 
+import Relic from '../models/Relic.js';
 
 const SALT_ROUNDS = 10;
 
-//registro de usuario
-const registerUser = async ({ name, lastname, username, email, password, role }) => {
-
+const registerUser = async ({ username, email, password, role }) => {
   const existingUser = await User.findOne({ $or: [{ email }, { username }] });
   if (existingUser) {
     const error = new Error('Email or username already exists');
-    error.status = 409; 
+    error.status = 409;
     throw error;
   }
 
-  //hash
   const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
-  //se crea el nuevo usuario
   const user = new User({
-    name,
-    lastname,
     username,
     email,
     password: hashedPassword,
-    role: role || 'user', 
+    role: role || 'user',
+    profilePicture: '', 
+    reviews: [], 
   });
 
   await user.save();
 
-  //se generan los tokens
   const accessToken = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user);
 
   return { user: sanitizeUser(user), accessToken, refreshToken };
 };
 
-//login normal
 const loginUser = async ({ identifier, password }) => {
-  // busca por mail o user
   const user = await User.findOne({
     $or: [{ email: identifier }, { username: identifier }],
   }).select('+password');
@@ -50,7 +43,6 @@ const loginUser = async ({ identifier, password }) => {
     throw error;
   }
 
-  //chequea la pass
   if (user.password) {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
@@ -64,14 +56,12 @@ const loginUser = async ({ identifier, password }) => {
     throw error;
   }
 
-  // genera tokens
   const accessToken = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user);
 
   return { user: sanitizeUser(user), accessToken, refreshToken };
 };
 
-//token de refresh
 const refreshAccessToken = async (refreshToken) => {
   try {
     const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
@@ -92,9 +82,8 @@ const refreshAccessToken = async (refreshToken) => {
   }
 };
 
-//busca por perfil
 const getUserProfile = async (userId) => {
-  const user = await User.findById(userId);
+  const user = await User.findById(userId).populate('reviews.reviewer', 'username');
   if (!user) {
     const error = new Error('User not found');
     error.status = 404;
@@ -103,19 +92,24 @@ const getUserProfile = async (userId) => {
   return sanitizeUser(user);
 };
 
-//update de perfil
 const updateUserProfile = async (userId, updates) => {
-  const allowedUpdates = ['name', 'lastname', 'username', 'email', 'location', 'niches'];
+  const allowedUpdates = ['name', 'lastname', 'username', 'email', 'location', 'niches', 'profilePicture'];
   const updateKeys = Object.keys(updates);
   const isValidUpdate = updateKeys.every((key) => allowedUpdates.includes(key));
-  
+
   if (!isValidUpdate) {
     const error = new Error('Invalid update fields');
     error.status = 400;
     throw error;
   }
 
-  // chequea si hay conflictos
+  const user = await User.findById(userId);
+  if (!user) {
+    const error = new Error('User not found');
+    error.status = 404;
+    throw error;
+  }
+
   if (updates.email || updates.username) {
     const conflict = await User.findOne({
       $or: [{ email: updates.email }, { username: updates.username }],
@@ -128,21 +122,77 @@ const updateUserProfile = async (userId, updates) => {
     }
   }
 
-  const user = await User.findByIdAndUpdate(userId, updates, {
-    new: true,
-    runValidators: true,
+  if (updates.niches) {
+    const currentNiches = user.niches.map(n => ({ category: n.category, specific: n.specific }));
+    const newNiches = updates.niches.map(n => ({ category: n.category, specific: n.specific }));
+
+    const removedNiches = currentNiches.filter(
+      cn => !newNiches.some(nn => nn.category === cn.category && nn.specific === cn.specific)
+    );
+
+    for (const removedNiche of removedNiches) {
+      await Relic.deleteMany({
+        owner: userId,
+        'niche.category': removedNiche.category,
+        'niche.specific': removedNiche.specific,
+      });
+
+      user.reliquaryLists = user.reliquaryLists.filter(
+        list => !(list.niche.category === removedNiche.category && list.niche.specific === removedNiche.specific)
+      );
+    }
+
+    user.niches = updates.niches;
+  }
+
+  allowedUpdates.forEach((key) => {
+    if (key !== 'niches' && updates[key] !== undefined) {
+      user[key] = updates[key];
+    }
   });
 
-  if (!user) {
-    const error = new Error('User not found');
-    error.status = 404;
-    throw error;
-  }
+  user.markModified('reliquaryLists');
+  user.markModified('niches');
+
+  await user.save();
 
   return sanitizeUser(user);
 };
 
-//Borra al usuario y las relics asociadas a ese user
+const addUserReview = async (targetUserId, reviewerId, { rating, comment }) => {
+  const user = await User.findById(targetUserId);
+  if (!user) {
+    const error = new Error('Target user not found');
+    error.status = 404;
+    throw error;
+  }
+
+  if (targetUserId.toString() === reviewerId.toString()) {
+    const error = new Error('Users cannot review themselves');
+    error.status = 400;
+    throw error;
+  }
+
+  const existingReview = user.reviews.find(r => r.reviewer.toString() === reviewerId.toString());
+  if (existingReview) {
+    const error = new Error('You have already reviewed this user');
+    error.status = 400;
+    throw error;
+  }
+
+  user.reviews.push({
+    reviewer: reviewerId,
+    rating,
+    comment: comment || undefined,
+    createdAt: new Date(),
+  });
+
+  user.markModified('reviews');
+  await user.save();
+
+  return sanitizeUser(user);
+};
+
 const deleteUser = async (userId) => {
   const user = await User.findById(userId);
   if (!user) {
@@ -151,20 +201,14 @@ const deleteUser = async (userId) => {
     throw error;
   }
 
-  //busca al owner con el id del usuario y llamamos al deleteMany de mongoose
   await Relic.deleteMany({ owner: userId });
-
-  //busca al user y lo borra
   await User.findByIdAndDelete(userId);
 };
 
-
-//registro y login desde Google, esto de momento es un placeholder
-// ya que no tengo la implementación de google auth aún
 const googleAuth = async ({ googleId, email, name, lastname }) => {
   let user = await User.findOne({ googleId }).select('+googleId');
 
-  if (!user) {    
+  if (!user) {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       const error = new Error('Email already registered with another method');
@@ -172,45 +216,38 @@ const googleAuth = async ({ googleId, email, name, lastname }) => {
       throw error;
     }
 
-    //crea el nuevo usuario
     user = new User({
       name,
       lastname: lastname || '',
       username: email.split('@')[0],
       email,
       googleId,
+      profilePicture: '', 
+      reviews: [], 
     });
     await user.save();
   }
 
-  //generar tokens
   const accessToken = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user);
 
   return { user: sanitizeUser(user), accessToken, refreshToken };
 };
 
-
-//---------------------------------------------------------------------------------------------------
-//acá tengo funciones que son reutilizadas a lo largo del servicio de auth como por ejemplo la de generar tokens
-
-// genera token
 const generateAccessToken = (user) => {
   return jwt.sign(
     { _id: user._id, email: user.email, username: user.username, role: user.role },
     process.env.JWT_SECRET,
-    { expiresIn: '15m' }
+    { expiresIn: process.env.JWT_EXPIRES_IN }
   );
 };
 
-//genera token de refresh
 const generateRefreshToken = (user) => {
   return jwt.sign({ _id: user._id }, process.env.JWT_REFRESH_SECRET, {
-    expiresIn: '7d',
-  });
+    expiresIn: process.env.JWT_REFRESH_EXPIRES_IN }
+  );
 };
 
-// sanitiza la data antes de devolverla
 const sanitizeUser = (user) => {
   const { password, googleId, ...safeUser } = user.toObject();
   return safeUser;
@@ -223,5 +260,6 @@ export {
   refreshAccessToken,
   getUserProfile,
   updateUserProfile,
-  deleteUser, 
+  addUserReview,
+  deleteUser,
 };

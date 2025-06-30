@@ -23,22 +23,18 @@ const reliquaryNicheSchema = Joi.object({
 const createUserSchema = Joi.object({
   name: Joi.string()
     .trim()
-    .min(2)
-    .required()
+    .min(2)    
     .regex(nonNumericRegex)
     .messages({
-      'string.min': 'El nombre debe tener al menos 2 caracteres',
-      'any.required': 'El nombre es obligatorio',
+      'string.min': 'El nombre debe tener al menos 2 caracteres',      
       'string.pattern.base': 'El nombre no puede ser solo números',
     }),
   lastname: Joi.string()
     .trim()
-    .min(2)
-    .required()
+    .min(2)    
     .regex(nonNumericRegex)
     .messages({
-      'string.min': 'El apellido debe tener al menos 2 caracteres',
-      'any.required': 'El apellido es obligatorio',
+      'string.min': 'El apellido debe tener al menos 2 caracteres',      
       'string.pattern.base': 'El apellido no puede ser solo números',
     }),
   username: Joi.string().trim().min(3).max(30).required().messages({
@@ -96,11 +92,21 @@ const createUserSchema = Joi.object({
 
 //Shema para la actualizacion de usuario
 const updateUserSchema = Joi.object({
-  name: Joi.string().trim().min(2).optional().messages({
-    'string.min': 'El nombre debe tener al menos 2 caracteres',
+  name: Joi.string().trim().allow('').custom((value, helpers) => {
+    if (value && value.length < 2) {
+      return helpers.error('string.min', { limit: 2 });
+    }
+    return value;
+  }).optional().messages({
+    'string.min': 'El nombre debe tener al menos 2 caracteres si se proporciona',
   }),
-  lastname: Joi.string().trim().min(2).optional().messages({
-    'string.min': 'El apellido debe tener al menos 2 caracteres',
+  lastname: Joi.string().trim().allow('').custom((value, helpers) => {
+    if (value && value.length < 2) {
+      return helpers.error('string.min', { limit: 2 });
+    }
+    return value;
+  }).optional().messages({
+    'string.min': 'El apellido debe tener al menos 2 caracteres si se proporciona',
   }),
   username: Joi.string().trim().min(3).max(30).optional().messages({
     'string.min': 'EL nombre de usuario debe tener al menos 3 caracteres',
@@ -154,9 +160,16 @@ const loginSchema = Joi.object({
   }),
 });
 
+const userReviewSchema = Joi.object({
+  targetUserId: Joi.string().hex().length(24).required(),
+  rating: Joi.number().integer().min(1).max(5).required(),
+  comment: Joi.string().trim().max(500).allow(''),
+});
+
 //funciones de validacion
 const validateUserCreation = (data) => createUserSchema.validate(data, { abortEarly: false });
 const validateUserUpdate = (data) => updateUserSchema.validate(data, { abortEarly: false });
 const validateLogin = (data) => loginSchema.validate(data, { abortEarly: false });
+const validateUserReview = (data) =>{ userReviewSchema.validate(data, { abortEarly: false });}
 
-export { validateUserCreation, validateUserUpdate, validateLogin };
+export { validateUserCreation, validateUserUpdate, validateLogin, validateUserReview };
