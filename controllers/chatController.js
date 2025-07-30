@@ -50,9 +50,7 @@ const findUserChats = async (req, res, next) => {
         members: memberData
       };  
     }));
-
-      
-    //console.log('Chats found:', filteredChats);
+        
 
     res.status(200).json(filteredChats);
 
@@ -73,7 +71,6 @@ const findChat = async (req, res, next) => {
     const chat = await Chat.findOne({
       members: { $all: [firstId, secondId] }
     });
-console.log('Finding chat between:', firstId, secondId);
     if (!chat) {
       return res.status(404).json({ message: "Chat no encontrado." });
     }
@@ -85,14 +82,13 @@ console.log('Finding chat between:', firstId, secondId);
 }
 
 const findChatById = async (req, res, next) => {
-  console.log('Finding chat by ID');
+  
   try {
     const { chatId } = req.params;
 
     if (!chatId) {
       return res.status(400).json({ message: "Se requiere un ID de chat." });
-    }
-    console.log('Finding chat by ID:', chatId);
+    }  
     const chat = await Chat.findById(chatId);
     
     if (!chat) {
@@ -108,12 +104,10 @@ const findChatById = async (req, res, next) => {
   }
 }
 
-const getMemberData = async (chat) => {
-  //console.log('Fetching member data for chat:', chat);
-  const memberIds = chat.members; 
-  //console.log('Member IDs:', memberIds);
+const getMemberData = async (chat) => {  
+  const memberIds = chat.members;   
   const members = await User.find({ _id: { $in: memberIds } }, 'name lastname profilePicture username');
-  //console.log('Members found:', members);
+  
   return members.map(member => ({
     id: member._id,
     name: member.name,

@@ -6,6 +6,6 @@ const chatRouter = express.Router();
 chatRouter.post('/', createChat);
 chatRouter.get('/:userId', findUserChats);
 chatRouter.get('/:firstId/:secondId', findChat);
-chatRouter.get('/by-id/:chatId', findChatById);
+chatRouter.get('/find/by-id/:chatId', findChatById);
 
 export {chatRouter};
