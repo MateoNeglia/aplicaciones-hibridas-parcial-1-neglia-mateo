@@ -15,7 +15,7 @@ import { upload } from '../middleware/uploadMiddleware.js';
 const router = express.Router();
 router.post('/add', authenticate, upload.single('picture') ,create);
 router.get('/reliquary/:userId', authenticate, getUserReliquary);
-router.post('/relics/:relicId/like', authenticate, likeRelic);
+router.post('/:relicId/like', authenticate, likeRelic);
 router.get('/', getRelics);
 router.get('/suggestions', authenticate, getSuggestions);
 router.delete('/:relicId', authenticate, remove);

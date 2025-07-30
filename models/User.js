@@ -94,6 +94,12 @@ const userSchema = new mongoose.Schema(
         ],
       },
     ],
+    likedRelics: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Relic',
+      },
+    ],
     role: {
       type: String,
       default: 'user',

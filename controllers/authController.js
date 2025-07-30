@@ -7,11 +7,15 @@ import {
   updateUserProfile,
   addUserReview,
   deleteUser,
+  getUserPublicProfile
 } from '../services/authService.js';
+import User from '../models/User.js';
 import { validateUserCreation, validateLogin, validateUserUpdate, validateUserReview } from '../validations/userValidations.js';
 import multer from 'multer';
 
 const upload = multer({ dest: 'uploads/' });
+
+
 
 const register = async (req, res, next) => {
   try {
@@ -74,6 +78,16 @@ const getProfile = async (req, res, next) => {
   }
 };
 
+const getPublicProfile = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const user = await getUserPublicProfile(userId);
+    res.status(200).json(user);
+  } catch (err) {
+    next({ status: err.status || 500, message: err.message });
+  }
+};
+
 const updateProfile = async (req, res, next) => {
   try {
     const updates = req.body;
@@ -105,6 +119,20 @@ const addReview = async (req, res, next) => {
     const reviewerId = req.user._id;
     const user = await addUserReview(targetUserId, reviewerId, { rating, comment });
     res.status(200).json(user);
+  } catch (err) {
+    next({ status: err.status || 500, message: err.message });
+  }
+};
+
+const getLikedRelics = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id).populate('likedRelics');
+    if (!user) {
+      const error = new Error('User not found');
+      error.status = 404;
+      throw error;
+    }
+    res.status(200).json(user.likedRelics);
   } catch (err) {
     next({ status: err.status || 500, message: err.message });
   }
@@ -148,4 +176,6 @@ export {
   updateProfile,
   addReview,
   deleteUserController,
+  getPublicProfile,
+  getLikedRelics
 };

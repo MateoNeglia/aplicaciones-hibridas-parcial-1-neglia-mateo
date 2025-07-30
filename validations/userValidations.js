@@ -122,6 +122,9 @@ const updateUserSchema = Joi.object({
     city: Joi.string().trim().allow('').optional(),
     country: Joi.string().trim().allow('').optional(),
   }).optional(),
+  profilePicture: Joi.string().trim().allow('').optional().messages({
+    'string.pattern.base': 'Formato de imagen inválido. Debe ser una ruta local (/uploads/filename.ext) o URL válida (http(s)://.../filename.ext).',
+  }),
   rating: Joi.number().min(0).max(5).optional().messages({
     'number.min': 'El rating no puede ser negativo',
     'number.max': 'El rating no puede exceder 5',

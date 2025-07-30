@@ -4,3 +4,15 @@ node_modules/
 
 # Archivos de entorno
 environments/.env
+
+uploads/
+uploads/*
+
+# Archivos de configuración de IDE
+.vscode/
+
+# Archivos de configuración de sistema
+.DS_Store
+
+# Archivos de caché
+.cache/

@@ -20,8 +20,8 @@ const registerUser = async ({ username, email, password, role }) => {
     email,
     password: hashedPassword,
     role: role || 'user',
-    profilePicture: '', 
-    reviews: [], 
+    profilePicture: '',
+    reviews: [],
   });
 
   await user.save();
@@ -92,8 +92,19 @@ const getUserProfile = async (userId) => {
   return sanitizeUser(user);
 };
 
+const getUserPublicProfile = async (userId) => {
+  const user = await User.findById(userId).select('username profilePicture niches location reviews reliquaryLists');
+  if (!user) {
+    const error = new Error('User not found');
+    error.status = 404;
+    throw error;
+  }
+  return user;
+};
+
 const updateUserProfile = async (userId, updates) => {
-  const allowedUpdates = ['name', 'lastname', 'username', 'email', 'location', 'niches', 'profilePicture'];
+  
+  const allowedUpdates = ['name', 'lastname', 'username', 'email', 'location', 'niches', 'profilePicture', 'role'];
   const updateKeys = Object.keys(updates);
   const isValidUpdate = updateKeys.every((key) => allowedUpdates.includes(key));
 
@@ -154,8 +165,7 @@ const updateUserProfile = async (userId, updates) => {
   user.markModified('reliquaryLists');
   user.markModified('niches');
 
-  await user.save();
-
+  await user.save();  
   return sanitizeUser(user);
 };
 
@@ -222,8 +232,8 @@ const googleAuth = async ({ googleId, email, name, lastname }) => {
       username: email.split('@')[0],
       email,
       googleId,
-      profilePicture: '', 
-      reviews: [], 
+      profilePicture: '',
+      reviews: [],
     });
     await user.save();
   }
@@ -262,4 +272,5 @@ export {
   updateUserProfile,
   addUserReview,
   deleteUser,
+  getUserPublicProfile,
 };
