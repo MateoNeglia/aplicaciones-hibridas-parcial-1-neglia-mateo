@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js",
-    "build": "node app.js"
-
+    "start": "node app.js",
+    "build": "npm install",
+    "dev": "nodemon app.js"
   },
   "keywords": [],
   "author": "Mateo Neglia",

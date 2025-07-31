@@ -7,7 +7,12 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 
 // Configuración del entorno y conexión a la base de datos
-dotenv.config({ path: path.resolve('environments', '.env') });
+// Try to load from environments directory first, then fallback to root
+try {
+  dotenv.config({ path: path.resolve('environments', '.env') });
+} catch (error) {
+  dotenv.config(); // Load from root directory or system environment variables
+}
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -15,10 +20,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // manejo de CORS
-const allowedOrigins = [
-  'http://localhost:3000', 
-  'http://localhost:5173', 
-];
+const allowedOrigins = process.env.ALLOWED_ORIGINS 
+  ? process.env.ALLOWED_ORIGINS.split(',') 
+  : ['http://localhost:3000', 'http://localhost:5173'];
+
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -40,7 +45,11 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Se conecta a la DB
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI_LOCAL);
+    const mongoUri = process.env.MONGODB_URI_PRODUCTION || process.env.MONGODB_URI_LOCAL;
+    if (!mongoUri) {
+      throw new Error('MongoDB URI not found in environment variables');
+    }
+    await mongoose.connect(mongoUri);
     console.log('Connected to MongoDB :D');
   } catch (err) {
     console.error('MongoDB connection error:', err);
