@@ -65,7 +65,8 @@ router.patch('/admin/users/:userId', authenticate, restrictTo('admin'), upload.s
 
     // Handle profile picture
     if (req.file) {
-      updates.profilePicture = `/uploads/${req.file.filename}`;
+      // Old: updates.profilePicture = `/uploads/${req.file.filename}`;
+      updates.profilePicture = req.file.path; // Use Cloudinary URL
     }
     
     // Validate updates

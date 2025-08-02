@@ -91,8 +91,8 @@ const getPublicProfile = async (req, res, next) => {
 const updateProfile = async (req, res, next) => {
   try {
     const updates = req.body;
-    if (req.file) {
-      updates.profilePicture = `/uploads/${req.file.filename}`;
+    if (req.file) {      
+      updates.profilePicture = req.file.path;
     }
     const { error } = validateUserUpdate(updates);
     if (error) {
