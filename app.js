@@ -5,21 +5,29 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import cloudinary from 'cloudinary';
 
 // Configuración del entorno y conexión a la base de datos
-// Try to load from environments directory first, then fallback to root
 try {
   dotenv.config({ path: path.resolve('environments', '.env') });
 } catch (error) {
-  dotenv.config(); // Load from root directory or system environment variables
+  dotenv.config();
 }
+
+// Configurar Cloudinary
+cloudinary.v2.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const app = express();
 const port = process.env.PORT || 8080;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+console.log(`Running in ${process.env.ALLOWED_ORIGINS} mode`);
 
-// manejo de CORS
+// Manejo de CORS
 const allowedOrigins = process.env.ALLOWED_ORIGINS 
   ? process.env.ALLOWED_ORIGINS.split(',') 
   : ['http://localhost:3000', 'http://localhost:5173'];
@@ -40,9 +48,8 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public'))); 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); 
 
-// Se conecta a la DB
+// Conectar a la DB
 const connectDB = async () => {
   try {
     const mongoUri = process.env.MONGODB_URI_PRODUCTION || process.env.MONGODB_URI_LOCAL;
@@ -85,7 +92,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// arranca el servidor
+// Arranca el servidor
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port} :)`);
 });

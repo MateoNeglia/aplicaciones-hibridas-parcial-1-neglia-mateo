@@ -1,16 +1,12 @@
 import multer from 'multer';
-import path from 'path';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import cloudinary from 'cloudinary';
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);    
-    const sanitizedName = file.originalname
-      .replace(/[^a-zA-Z0-9.-]/g, '-') 
-      .replace(/-+/g, '-'); 
-    cb(null, `picture-${uniqueSuffix}-${sanitizedName}`);
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary.v2,
+  params: {
+    folder: 'relicario-images',
+    allowed_formats: ['jpg', 'png', 'jpeg', 'gif', 'webp'],
   },
 });
 

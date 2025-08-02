@@ -3,7 +3,7 @@ import Relic from '../models/Relic.js';
 
 const createRelic = async (user, req) => {
   const { niche, name, description, year, condition, set } = req.body;
-  const picture = req.file ? `/uploads/${req.file.filename}` : undefined;
+  const picture = req.file ? req.file.path : undefined;
 
   const relic = new Relic({
     owner: user._id,

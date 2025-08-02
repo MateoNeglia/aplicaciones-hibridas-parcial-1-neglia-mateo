@@ -6,6 +6,45 @@ import { createRelic, updateRelic, deleteRelic } from '../services/relicService.
 import { validateRelicUpdate, validateRelicCreation } from '../validations/relicValidations.js';
 
 // Create a relic (admins can specify owner)
+// const create = async (req, res, next) => {
+//   try {
+//     const relicData = JSON.parse(req.body.relic);
+//     const { error } = validateRelicCreation(relicData);
+//     if (error) {
+//       return res.status(400).json({ message: error.details.map(d => d.message).join(', ') });
+//     }
+    
+//     let ownerId = req.user._id;
+//     if (req.user.role === 'admin' && req.body.ownerId) {
+//       ownerId = req.body.ownerId;
+//     }
+    
+//     const owner = await User.findById(ownerId);
+//     if (!owner) {
+//       const error = new Error('Owner not found');
+//       error.status = 404;
+//       throw error;
+//     }
+    
+//     let niche = await Niche.findOne({ category: relicData.niche.category });
+//     if (!niche) {
+//       niche = new Niche({
+//         category: relicData.niche.category,
+//         specifics: [relicData.niche.specific],
+//       });
+//       await niche.save();
+//     } else if (!niche.specifics.includes(relicData.niche.specific)) {
+//       niche.specifics.push(relicData.niche.specific);
+//       await niche.save();
+//     }
+
+//     const result = await createRelic(owner, { ...req, body: relicData });
+//     res.status(201).json(result);
+//   } catch (err) {
+//     next({ status: err.status || 500, message: err.message });
+//   }
+// };
+
 const create = async (req, res, next) => {
   try {
     const relicData = JSON.parse(req.body.relic);
@@ -46,6 +85,62 @@ const create = async (req, res, next) => {
 };
 
 // Update a relic (admins can edit any relic)
+// const update = async (req, res, next) => {  
+//   try {
+//     const { relicId } = req.params;
+//     const userId = req.user._id;
+//     const userRole = req.user.role;
+    
+//     const updateData = { ...req.body };
+
+//     if (req.body['niche[category]'] && req.body['niche[specific]']) {
+//       updateData.niche = {
+//         category: req.body['niche[category]'],
+//         specific: req.body['niche[specific]'],
+//       };
+//     }
+    
+//     const relic = await Relic.findById(relicId);
+//     if (!relic) {
+//       const error = new Error('Relic not found');
+//       error.status = 404;
+//       throw error;
+//     }
+//     updateData.picture = req.file ? `/uploads/${req.file.filename}` : (req.body.picture || relic.picture);
+
+//     const { error } = validateRelicUpdate(updateData);
+//     if (error) {
+//       return res.status(400).json({ message: error.details.map(d => d.message).join(', ') });
+//     }
+
+//     if (userRole !== 'admin' && relic.owner.toString() !== userId.toString()) {
+//       const error = new Error('Solo puedes editar tus propias reliquias');
+//       error.status = 403;
+//       throw error;
+//     }
+    
+//     if (updateData.niche) {
+//       const niche = updateData.niche;
+//       let nicheDoc = await Niche.findOne({ category: niche.category });
+//       if (!nicheDoc) {
+//         nicheDoc = new Niche({
+//           category: niche.category,
+//           specifics: [niche.specific],
+//         });
+//         await nicheDoc.save();
+//       } else if (!nicheDoc.specifics.includes(niche.specific)) {
+//         nicheDoc.specifics.push(niche.specific);
+//         await nicheDoc.save();
+//       }
+//     }
+
+//     const result = await updateRelic(relic, userId, updateData);
+//     res.status(200).json(result);
+//   } catch (err) {
+//     next({ status: err.status || 500, message: err.message });
+//   }
+// };
+
 const update = async (req, res, next) => {  
   try {
     const { relicId } = req.params;
@@ -67,7 +162,7 @@ const update = async (req, res, next) => {
       error.status = 404;
       throw error;
     }
-    updateData.picture = req.file ? `/uploads/${req.file.filename}` : (req.body.picture || relic.picture);
+    updateData.picture = req.file ? req.file.path : (req.body.picture || relic.picture);
 
     const { error } = validateRelicUpdate(updateData);
     if (error) {
