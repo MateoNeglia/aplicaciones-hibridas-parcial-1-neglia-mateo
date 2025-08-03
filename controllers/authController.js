@@ -10,6 +10,7 @@ import {
   getUserPublicProfile
 } from '../services/authService.js';
 import User from '../models/User.js';
+import { OAuth2Client } from 'google-auth-library';
 import { validateUserCreation, validateLogin, validateUserUpdate, validateUserReview } from '../validations/userValidations.js';
 import multer from 'multer';
 
@@ -156,9 +157,19 @@ const deleteUserController = async (req, res, next) => {
 
 const googleLogin = async (req, res, next) => {
   try {
-    const { googleId, email, name, lastname } = req.body;
+    const { credential } = req.body;
+    if (!credential) {
+      return res.status(400).json({ message: 'Google credential is required' });
+    }
+    const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const { sub: googleId, email, name, family_name: lastname } = payload;
     if (!googleId || !email || !name) {
-      return res.status(400).json({ message: 'Google ID, email, and name are required' });
+      return res.status(400).json({ message: 'Invalid Google token payload' });
     }
     const result = await googleAuth({ googleId, email, name, lastname });
     res.status(200).json(result);
